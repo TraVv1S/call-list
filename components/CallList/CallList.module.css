@@ -1,0 +1,46 @@
+.root {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.table {
+  width: 100%;
+
+  th {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 148%;
+    color: var(--text-secondary);
+    text-align: left;
+  }
+
+  tr {
+    border-bottom: 1px solid var(--ui-border);
+    height: 65px;
+    &:hover {
+      background-color: var(--ui-light-gray);
+    }
+  }
+
+  td {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 148%;
+    color: var(--text-primary);
+  }
+
+  .muted {
+    color: var(--text-secondary);
+  }
+}
+
+.rating {
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 26px;
+  font-size: 13px;
+}

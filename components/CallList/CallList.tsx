@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import styles from "./CallList.module.css";
 
 interface Call {
   id: number;
@@ -15,8 +16,11 @@ interface Call {
   }[];
 }
 
-const cellStyles = "h-[65px] text-[15px]";
-const ratingTypes = ["Отлично", "Хорошо", "Плохо"];
+const ratingTypes = [
+  { class: "excelent", name: "Отлично" },
+  { class: "good", name: "Хорошо" },
+  { class: "bad", name: "Плохо" },
+];
 const ratingStyles = {
   Отлично:
     "bg-[var(--ui-light-green)] text-[var(--text-green)] border border-[var(--ui-green)]",
@@ -42,25 +46,25 @@ export const CallList = () => {
   }, []);
 
   return (
-    <div className="bg-white rounded-lg px-6 py-10">
-      <table className="w-full">
-        <thead className="text-sm font-normal leading-[148%] text-[var(--text-secondary)]">
+    <div className={styles.root}>
+      <table className={styles.table}>
+        <thead>
           <tr>
-            <th className="font-normal py-5">Тип</th>
-            <th className="font-normal py-5">Время</th>
-            <th className="font-normal py-5">Сотрудник</th>
-            <th className="font-normal py-5">Звонок</th>
-            <th className="font-normal py-5">Источник</th>
-            <th className="font-normal py-5">Оценка</th>
-            <th className="font-normal py-5">Длительность</th>
+            <th>Тип</th>
+            <th>Время</th>
+            <th>Сотрудник</th>
+            <th>Звонок</th>
+            <th>Источник</th>
+            <th>Оценка</th>
+            <th>Длительность</th>
           </tr>
         </thead>
         <tbody>
           {calls &&
             calls.length > 0 &&
             calls.map((call, index) => (
-              <tr key={call.id} className="border-b border-[var(--ui-border)]">
-                <td className={cellStyles}>
+              <tr key={call.id}>
+                <td>
                   <Image
                     src={
                       call.in_out === 1
@@ -72,13 +76,13 @@ export const CallList = () => {
                     height={24}
                   />
                 </td>
-                <td className={cellStyles}>
+                <td>
                   {new Date(call.date).toLocaleTimeString("ru-RU", {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
                 </td>
-                <td className={cellStyles}>
+                <td>
                   {call.person_id ? (
                     <Image
                       src="/icons/user_avatar.svg"
@@ -95,26 +99,20 @@ export const CallList = () => {
                     />
                   )}
                 </td>
-                <td className={cellStyles}>{call.from_number}</td>
-                <td className={`${cellStyles} text-[var(--text-secondary)]`}>
+                <td>{call.from_number}</td>
+                <td className={styles.muted}>
                   {call.source ? call.source : "Не указан"}
                 </td>
-                <td className={cellStyles}>
+                <td>
                   <div
-                    className={`${
-                      ratingStyles[
-                        ratingTypes[
-                          index % ratingTypes.length
-                        ] as keyof typeof ratingStyles
-                      ]
-                    } rounded-lg flex items-center justify-center w-[70px] h-[26px] text-[13px]`}
+                    className={`${styles.rating} ${
+                      ratingTypes[index % ratingTypes.length].class
+                    }`}
                   >
-                    {ratingTypes[index % ratingTypes.length]}
+                    {ratingTypes[index % ratingTypes.length].name}
                   </div>
                 </td>
-                <td className={cellStyles}>
-                  {call.stages[0]?.duration || "00:00"}
-                </td>
+                <td>{call.stages[0]?.duration || "00:00"}</td>
               </tr>
             ))}
         </tbody>

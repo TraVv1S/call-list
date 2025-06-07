@@ -1,3 +1,5 @@
+import styles from "./Select.module.css";
+
 interface SelectProps {
   id: string;
   options: string[];
@@ -5,10 +7,7 @@ interface SelectProps {
 
 export const Select = ({ id, options }: SelectProps) => {
   return (
-    <select
-      name={id}
-      className="text-sm font-normal leading-[148%] text-[var(--text-secondary)]"
-    >
+    <select name={id} className={styles.root}>
       {options.map((option) => (
         <option key={option} value={option}>
           {option}
