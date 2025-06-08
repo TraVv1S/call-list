@@ -21,14 +21,6 @@ const ratingTypes = [
   { class: "good", name: "Хорошо" },
   { class: "bad", name: "Плохо" },
 ];
-const ratingStyles = {
-  Отлично:
-    "bg-[var(--ui-light-green)] text-[var(--text-green)] border border-[var(--ui-green)]",
-  Хорошо:
-    "bg-[var(--ui-secondary)] text-[var(--text-primary)] border border-[var(--ui-icon)]",
-  Плохо:
-    "bg-[var(--ui-light-red)] text-[var(--ui-red)] border border-[var(--ui-red)]",
-};
 
 export const CallList = () => {
   const [calls, setCalls] = useState<Call[]>([]);
@@ -106,13 +98,15 @@ export const CallList = () => {
                 <td>
                   <div
                     className={`${styles.rating} ${
-                      ratingTypes[index % ratingTypes.length].class
+                      styles[ratingTypes[index % ratingTypes.length].class]
                     }`}
                   >
                     {ratingTypes[index % ratingTypes.length].name}
                   </div>
                 </td>
-                <td>{call.stages[0]?.duration || "00:00"}</td>
+                <td className={styles.duration}>
+                  {call.stages[0]?.duration || "00:00"}
+                </td>
               </tr>
             ))}
         </tbody>

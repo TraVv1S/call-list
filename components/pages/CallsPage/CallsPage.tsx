@@ -1,3 +1,4 @@
+"use client";
 import { Filter } from "@/components/Filter";
 import { CallList } from "@/components/CallList";
 import styles from "./CallsPage.module.css";

@@ -1,24 +1,31 @@
 .root {
   background-color: #fff;
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 8px;
+  padding-left: 40px;
 }
 
 .table {
   width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
 
   th {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 148%;
     color: var(--text-secondary);
     text-align: left;
+
+    &:last-child {
+      text-align: right;
+      padding-right: 40px;
+    }
   }
 
   tr {
     border-bottom: 1px solid var(--ui-border);
     height: 65px;
-    &:hover {
+    &:has(td):hover {
       background-color: var(--ui-light-gray);
     }
   }
@@ -28,6 +35,15 @@
     font-weight: 400;
     line-height: 148%;
     color: var(--text-primary);
+
+    &:has(.rating) {
+      width: 30%;
+    }
+
+    &:last-child {
+      text-align: right;
+      padding-right: 40px;
+    }
   }
 
   .muted {
@@ -36,11 +52,29 @@
 }
 
 .rating {
-  border-radius: 16px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 70px;
   height: 26px;
   font-size: 13px;
+
+  &.excelent {
+    background-color: var(--ui-light-green);
+    color: var(--text-green);
+    border: 1px solid var(--ui-green);
+  }
+
+  &.good {
+    background-color: var(--ui-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--ui-icon);
+  }
+
+  &.bad {
+    background-color: var(--ui-light-red);
+    color: var(--ui-red);
+    border: 1px solid var(--ui-red);
+  }
 }
