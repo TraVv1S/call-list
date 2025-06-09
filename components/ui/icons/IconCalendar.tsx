@@ -6,7 +6,7 @@ type IconCalendarProps = {
 
 export const IconCalendar = ({
   className = "",
-  size = 16,
+  size = 18,
   color = "currentColor",
 }: IconCalendarProps) => (
   <svg

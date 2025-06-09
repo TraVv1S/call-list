@@ -12,7 +12,6 @@
 .buttons {
   display: flex;
   align-items: center;
-  gap: 4px;
 }
 
 .button {
@@ -23,11 +22,22 @@
   align-items: center;
   gap: 4px;
   color: #005ff8;
+
+  &:disabled {
+    color: var(--ui-red);
+  }
+}
+
+.selectButton {
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .options {
   position: absolute;
-  min-width: 133px;
+  min-width: 204px;
   margin: 12px 0;
   padding: 0;
   top: 100%;
@@ -41,8 +51,8 @@
   box-shadow: 0px 4px 20px 0px #00000014;
 
   li {
-    padding: 7px 12px;
-    font-size: 12px;
+    padding: 11px 12px;
+    font-size: 14px;
     line-height: 18px;
     cursor: pointer;
     list-style: none;

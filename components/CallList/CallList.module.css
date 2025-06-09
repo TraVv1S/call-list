@@ -2,6 +2,7 @@
   background-color: #fff;
   border-radius: 8px;
   padding-left: 40px;
+  box-shadow: 0px 4px 5px 0px #e9edf3;
 }
 
 .table {
@@ -20,13 +21,44 @@
       text-align: right;
       padding-right: 40px;
     }
+
+    &.typeHeader {
+      width: 40px;
+    }
+
+    &.timeHeader {
+      width: 65px;
+    }
+
+    &.employeeHeader {
+      width: 101px;
+    }
+
+    &.callHeader {
+      width: 250px;
+    }
+
+    &.sourceHeader {
+      width: 157px;
+    }
+
+    &.ratingHeader {
+      width: auto;
+    }
+
+    &.durationHeader {
+      width: 100px;
+    }
   }
 
   tr {
     border-bottom: 1px solid var(--ui-border);
     height: 65px;
-    &:has(td):hover {
+    &:has(td:not(.dateHeader)):hover {
       background-color: var(--ui-light-gray);
+    }
+    &:last-child {
+      border-bottom: none;
     }
   }
 
@@ -44,6 +76,18 @@
       text-align: right;
       padding-right: 40px;
     }
+
+    &.dateHeader {
+      padding: 30px 0 16px;
+      text-align: left;
+      font-size: 15px;
+
+      sup {
+        font-size: 12px;
+        color: #899cb1;
+        margin-left: 2px;
+      }
+    }
   }
 
   .muted {
@@ -58,7 +102,7 @@
   justify-content: center;
   width: 70px;
   height: 26px;
-  font-size: 13px;
+  font-size: 14px;
 
   &.excelent {
     background-color: var(--ui-light-green);
@@ -77,4 +121,15 @@
     color: var(--ui-red);
     border: 1px solid var(--ui-red);
   }
+}
+
+.avatar {
+  object-fit: contain;
+}
+
+.empty {
+  text-align: center;
+  padding: 30px 0;
+  font-size: 15px;
+  color: var(--text-secondary);
 }
