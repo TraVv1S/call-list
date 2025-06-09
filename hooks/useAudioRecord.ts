@@ -22,14 +22,11 @@ export const useAudioRecord = (): UseAudioRecordReturn => {
 
       try {
         const response = await fetch(
-          process.env.NEXT_PUBLIC_BACKEND_URL +
-            "/getRecord?" +
-            `record=${recordId}&partnership_id=${partnershipId}`,
+          `/api/record?record=${recordId}&partnership_id=${partnershipId}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Bearer " + process.env.NEXT_PUBLIC_ACCESS_TOKEN,
             },
           }
         );
@@ -38,7 +35,7 @@ export const useAudioRecord = (): UseAudioRecordReturn => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = new Blob([await response.blob()], { type: "audio/mpeg" });
+        const data = await response.blob();
         const audioUrl = URL.createObjectURL(data);
         setRecord(audioUrl);
       } catch (err) {

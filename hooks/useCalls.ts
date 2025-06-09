@@ -25,18 +25,12 @@ export const useCalls = (
     setError(null);
 
     try {
-      const response = await fetch(
-        process.env.NEXT_PUBLIC_BACKEND_URL +
-          "/getList?" +
-          searchParams.toString(),
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + process.env.NEXT_PUBLIC_ACCESS_TOKEN,
-          },
-        }
-      );
+      const response = await fetch("/api/calls?" + searchParams.toString(), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
