@@ -1,34 +1,16 @@
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Select } from "@/components/ui/Select";
 import { DatePicker } from "@/components/ui/DatePicker";
 import styles from "./Filter.module.css";
 import { useOutsideClick } from "@/hooks/useOutsideClick";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useFilter } from "@/hooks/useFilter";
 
 export const Filter = () => {
   const [type, setType] = useState("Все типы");
   const [isTypeSelectOpen, setIsTypeSelectOpen] = useState(false);
   const [date, setDate] = useState("3 дня");
   const [isDateSelectOpen, setIsDateSelectOpen] = useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const createQueryString = useCallback(
-    (parameters: { [key: string]: string }) => {
-      const params = new URLSearchParams(searchParams.toString());
-      Object.entries(parameters).forEach(([name, value]) => {
-        if (value) {
-          params.set(name, value);
-        } else {
-          params.delete(name);
-        }
-      });
-
-      return params.toString();
-    },
-    [searchParams]
-  );
+  const { updateFilter } = useFilter();
 
   const ref = useRef<HTMLDivElement>(null);
   useOutsideClick(ref, () => {
@@ -41,13 +23,9 @@ export const Filter = () => {
     setType(value);
     setIsTypeSelectOpen(false);
     if (value !== "Все типы") {
-      router.push(
-        `${pathname}?${createQueryString({
-          in_out: value === "Входящие" ? "1" : "0",
-        })}`
-      );
+      updateFilter({ in_out: value === "Входящие" ? "1" : "0", limit: "" });
     } else {
-      router.push(`${pathname}?${createQueryString({ in_out: "" })}`);
+      updateFilter({ in_out: "", limit: "" });
     }
   };
 
@@ -55,18 +33,23 @@ export const Filter = () => {
     let date_start, date_end;
     const today = new Date();
     switch (value) {
+      case "3 дня":
+        date_end = today.toISOString().split("T")[0];
+        date_start = new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0];
+
+        break;
       case "Неделя":
         date_end = today.toISOString().split("T")[0];
-        date_start = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
+        date_start = new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000)
           .toISOString()
           .split("T")[0];
 
         break;
       case "Месяц":
         date_end = today.toISOString().split("T")[0];
-        date_start = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000)
-          .toISOString()
-          .split("T")[0];
+        date_start = date_end.slice(0, 8) + "01";
 
         break;
       case "Год":
@@ -81,7 +64,7 @@ export const Filter = () => {
         date_end = "";
         break;
     }
-    router.push(`${pathname}?${createQueryString({ date_start, date_end })}`);
+    updateFilter({ date_start, date_end, limit: "" });
     setDate(value);
     setIsDateSelectOpen(false);
   };

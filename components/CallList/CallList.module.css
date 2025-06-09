@@ -133,3 +133,8 @@
   font-size: 15px;
   color: var(--text-secondary);
 }
+
+.loadMore {
+  width: 100%;
+  height: 40px;
+}

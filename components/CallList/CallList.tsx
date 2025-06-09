@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, Fragment } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import styles from "./CallList.module.css";
+import { useFilter } from "@/hooks/useFilter";
 
 interface Call {
   id: number;
@@ -32,8 +33,9 @@ const ratingTypes = [
 
 export const CallList = () => {
   const [calls, setCalls] = useState<Call[]>([]);
+  const [total, setTotal] = useState(0);
   const searchParams = useSearchParams();
-
+  const { updateFilter } = useFilter();
   const groupedCalls = useMemo(() => {
     const today = new Date();
     const yesterday = new Date(today);
@@ -97,11 +99,21 @@ export const CallList = () => {
     );
     const data = await response.json();
     setCalls(data.results);
+    setTotal(data.total_rows);
   };
 
   useEffect(() => {
     getCalls();
   }, [searchParams]);
+
+  const loadMore = async () => {
+    const limit = searchParams.get("limit");
+    if (limit) {
+      updateFilter({ limit: (Number(limit) + 50).toString() });
+    } else {
+      updateFilter({ limit: "100" });
+    }
+  };
 
   if (!calls || calls.length === 0) {
     return (
@@ -214,6 +226,11 @@ export const CallList = () => {
           ))}
         </tbody>
       </table>
+      {total > calls.length && (
+        <button onClick={loadMore} className={styles.loadMore}>
+          Показать ещё
+        </button>
+      )}
     </div>
   );
 };
