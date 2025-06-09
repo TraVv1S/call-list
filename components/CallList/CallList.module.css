@@ -152,6 +152,24 @@
   color: var(--text-secondary);
 }
 
+.loading {
+  text-align: center;
+  padding: 30px 0;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.error {
+  text-align: center;
+  padding: 30px 0;
+  font-size: 15px;
+  color: var(--ui-red);
+  background-color: var(--ui-light-red);
+  border-radius: 4px;
+  margin: 20px;
+  border: 1px solid var(--ui-red);
+}
+
 .loadMore {
   width: fit-content;
   padding: 4px 16px;
@@ -166,4 +184,9 @@
   color: var(--text-primary);
   cursor: pointer;
   display: block;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }

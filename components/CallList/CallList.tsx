@@ -1,125 +1,56 @@
 "use client";
 
-import { useState, useEffect, useMemo, Fragment } from "react";
+import { useMemo, useCallback, Fragment } from "react";
 import { useSearchParams } from "next/navigation";
 import styles from "./CallList.module.css";
 import { useFilter } from "@/hooks/useFilter";
+import { useCalls } from "@/hooks/useCalls";
+import { groupCallsByDate } from "@/utils/groupCallsByDate";
 import { IconArrow } from "../ui/icons";
 import { CallRow } from "../CallRow/CallRow";
 
-export interface Call {
-  id: number;
-  in_out: 1 | 0;
-  date: string;
-  person_id: number;
-  person_avatar: string;
-  from_number: string;
-  to_number: string;
-  source: string;
-  partner_data: {
-    id: string;
-    name: string;
-    phone: string;
-  };
-  time: string;
-  duration: string;
-  status: "Дозвонился" | "Не дозвонился";
-  record: string;
-  partnership_id: number;
-}
+export type { Call } from "@/types/call";
 
 export const CallList = () => {
-  const [calls, setCalls] = useState<Call[]>([]);
-  const [total, setTotal] = useState(0);
   const searchParams = useSearchParams();
   const { updateFilter } = useFilter();
+
+  const { calls, total, isLoading, error, loadMore } = useCalls(
+    searchParams,
+    updateFilter
+  );
+
   const groupedCalls = useMemo(() => {
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    const groups = calls?.reduce((acc, call) => {
-      const callDate = new Date(call.date);
-      const dateKey = callDate.toLocaleDateString("en-US");
-
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
-      acc[dateKey].push(call);
-      return acc;
-    }, {} as Record<string, Call[]>);
-
-    return Object.entries(groups || {}).map(([date, calls]) => {
-      const callDate = new Date(calls[0].date);
-      let label = date;
-
-      const todayDateOnly = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate()
-      );
-      const yesterdayDateOnly = new Date(
-        yesterday.getFullYear(),
-        yesterday.getMonth(),
-        yesterday.getDate()
-      );
-      const callDateOnly = new Date(
-        callDate.getFullYear(),
-        callDate.getMonth(),
-        callDate.getDate()
-      );
-
-      if (callDateOnly.getTime() === todayDateOnly.getTime()) {
-        label = `Сегодня`;
-      } else if (callDateOnly.getTime() === yesterdayDateOnly.getTime()) {
-        label = `Вчера`;
-      } else {
-        label = date;
-      }
-
-      return { date: label, calls };
-    });
+    return groupCallsByDate(calls);
   }, [calls]);
 
-  const getCalls = async () => {
-    const response = await fetch(
-      process.env.NEXT_PUBLIC_BACKEND_URL +
-        "/getList?" +
-        searchParams.toString(),
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + process.env.NEXT_PUBLIC_ACCESS_TOKEN,
-        },
+  const handleSort = useCallback(
+    (sort_by: "date" | "duration") => {
+      const order = searchParams.get("order");
+      if (order) {
+        updateFilter({ sort_by, order: order === "ASC" ? "DESC" : "ASC" });
+      } else {
+        updateFilter({ sort_by, order: "ASC" });
       }
+    },
+    [searchParams, updateFilter]
+  );
+
+  if (error) {
+    return (
+      <div className={styles.root}>
+        <div className={styles.error}>{error}</div>
+      </div>
     );
-    const data = await response.json();
-    setCalls(data.results);
-    setTotal(data.total_rows);
-  };
+  }
 
-  useEffect(() => {
-    getCalls();
-  }, [searchParams]);
-
-  const loadMore = async () => {
-    const limit = searchParams.get("limit");
-    if (limit) {
-      updateFilter({ limit: (Number(limit) + 50).toString() });
-    } else {
-      updateFilter({ limit: "100" });
-    }
-  };
-
-  const handleSort = (sort_by: "date" | "duration") => {
-    const order = searchParams.get("order");
-    if (order) {
-      updateFilter({ sort_by, order: order === "ASC" ? "DESC" : "ASC" });
-    } else {
-      updateFilter({ sort_by, order: "ASC" });
-    }
-  };
+  if (isLoading && calls.length === 0) {
+    return (
+      <div className={styles.root}>
+        <div className={styles.loading}>Загрузка звонков...</div>
+      </div>
+    );
+  }
 
   if (!calls || calls.length === 0) {
     return (
@@ -191,8 +122,12 @@ export const CallList = () => {
         </tbody>
       </table>
       {total > calls.length && (
-        <button onClick={loadMore} className={styles.loadMore}>
-          Показать ещё
+        <button
+          onClick={loadMore}
+          className={styles.loadMore}
+          disabled={isLoading}
+        >
+          {isLoading ? "Загрузка..." : "Показать ещё"}
         </button>
       )}
     </div>
