@@ -66,6 +66,26 @@ export const DatePicker = ({
               {option}
             </li>
           ))}
+          <li className={styles.customDate}>
+            <div className={styles.customDateInput}>
+              <input
+                name="date_start"
+                type="date"
+                placeholder="__.__.__"
+                required
+              />
+              <span>-</span>
+              <input
+                name="date_end"
+                type="date"
+                placeholder="__.__.__"
+                required
+              />
+              <button onClick={() => select("Диапазон")}>
+                <IconCalendar color="var(--ui-icon)" />
+              </button>
+            </div>
+          </li>
         </ul>
       )}
     </div>

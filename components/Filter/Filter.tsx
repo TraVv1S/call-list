@@ -59,6 +59,14 @@ export const Filter = () => {
           .split("T")[0];
 
         break;
+      case "Диапазон":
+        date_start = (
+          document.querySelector("input[name='date_start']") as HTMLInputElement
+        )?.value;
+        date_end = (
+          document.querySelector("input[name='date_end']") as HTMLInputElement
+        )?.value;
+        break;
       default:
         date_start = "";
         date_end = "";
@@ -79,7 +87,7 @@ export const Filter = () => {
         setIsOpen={setIsTypeSelectOpen}
       />
       <DatePicker
-        options={["3 дня", "Неделя", "Месяц", "Год"]}
+        options={["3 дня", "Неделя", "Месяц", "Год", "Диапазон"]}
         value={date}
         select={onDateChange}
         isOpen={isDateSelectOpen}
