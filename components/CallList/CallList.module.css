@@ -28,6 +28,11 @@
 
     &.timeHeader {
       width: 65px;
+      cursor: pointer;
+
+      svg {
+        margin-left: 10px;
+      }
     }
 
     &.employeeHeader {
@@ -48,6 +53,11 @@
 
     &.durationHeader {
       width: 100px;
+      cursor: pointer;
+
+      svg {
+        margin-left: 10px;
+      }
     }
   }
 

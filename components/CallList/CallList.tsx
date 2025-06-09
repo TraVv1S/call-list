@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useMemo, Fragment } from "react";
 import { useSearchParams } from "next/navigation";
-import Image from "next/image";
 import styles from "./CallList.module.css";
 import { useFilter } from "@/hooks/useFilter";
+import { IconArrow } from "../ui/icons";
+import { CallRow } from "../CallRow/CallRow";
 
-interface Call {
+export interface Call {
   id: number;
   in_out: 1 | 0;
   date: string;
@@ -23,13 +24,9 @@ interface Call {
   time: string;
   duration: string;
   status: "Дозвонился" | "Не дозвонился";
+  record: string;
+  partnership_id: number;
 }
-
-const ratingTypes = [
-  { class: "excelent", name: "Отлично" },
-  { class: "good", name: "Хорошо" },
-  { class: "bad", name: "Плохо" },
-];
 
 export const CallList = () => {
   const [calls, setCalls] = useState<Call[]>([]);
@@ -115,6 +112,15 @@ export const CallList = () => {
     }
   };
 
+  const handleSort = (sort_by: "date" | "duration") => {
+    const order = searchParams.get("order");
+    if (order) {
+      updateFilter({ sort_by, order: order === "ASC" ? "DESC" : "ASC" });
+    } else {
+      updateFilter({ sort_by, order: "ASC" });
+    }
+  };
+
   if (!calls || calls.length === 0) {
     return (
       <div className={styles.root}>
@@ -129,12 +135,36 @@ export const CallList = () => {
         <thead>
           <tr>
             <th className={styles.typeHeader}>Тип</th>
-            <th className={styles.timeHeader}>Время</th>
+            <th
+              className={styles.timeHeader}
+              onClick={() => handleSort("date")}
+            >
+              Время
+              {searchParams.get("sort_by") === "date" && (
+                <IconArrow
+                  direction={
+                    searchParams.get("order") === "ASC" ? "up" : "down"
+                  }
+                />
+              )}
+            </th>
             <th className={styles.employeeHeader}>Сотрудник</th>
             <th className={styles.callHeader}>Звонок</th>
             <th className={styles.sourceHeader}>Источник</th>
             <th className={styles.ratingHeader}>Оценка</th>
-            <th className={styles.durationHeader}>Длительность</th>
+            <th
+              className={styles.durationHeader}
+              onClick={() => handleSort("duration")}
+            >
+              Длительность
+              {searchParams.get("sort_by") === "duration" && (
+                <IconArrow
+                  direction={
+                    searchParams.get("order") === "ASC" ? "up" : "down"
+                  }
+                />
+              )}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -154,73 +184,7 @@ export const CallList = () => {
                 </tr>
               )}
               {group.calls.map((call, index) => (
-                <tr key={call.id}>
-                  <td>
-                    <Image
-                      src={
-                        call.in_out === 1
-                          ? call.status === "Дозвонился"
-                            ? "/icons/incoming.svg"
-                            : "/icons/incoming_missed.svg"
-                          : call.status === "Дозвонился"
-                          ? "/icons/outgoing.svg"
-                          : "/icons/outgoing_missed.svg"
-                      }
-                      alt="arrow"
-                      width={24}
-                      height={24}
-                    />
-                  </td>
-                  <td>
-                    {new Date(call.date).toLocaleTimeString("ru-RU", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </td>
-                  <td>
-                    {call.person_avatar ? (
-                      <Image
-                        src={call.person_avatar}
-                        alt="user"
-                        width={32}
-                        height={32}
-                        className={styles.avatar}
-                      />
-                    ) : (
-                      <Image
-                        src="/icons/user_avatar.svg"
-                        alt="user"
-                        width={32}
-                        height={32}
-                        className={styles.avatar}
-                      />
-                    )}
-                  </td>
-                  <td>
-                    {call.in_out === 1 ? call.from_number : call.to_number}
-                  </td>
-                  <td className={styles.muted}>
-                    {call.source ? call.source : ""}
-                  </td>
-                  <td>
-                    <div
-                      className={`${styles.rating} ${
-                        styles[ratingTypes[index % ratingTypes.length].class]
-                      }`}
-                    >
-                      {ratingTypes[index % ratingTypes.length].name}
-                    </div>
-                  </td>
-                  <td className={styles.duration}>
-                    {call.time
-                      ? `${Math.floor(Number(call.time) / 60)}:${
-                          Number(call.time) % 60 < 10
-                            ? "0" + (Number(call.time) % 60)
-                            : Number(call.time) % 60
-                        }`
-                      : ""}
-                  </td>
-                </tr>
+                <CallRow key={call.id} call={call} index={index} />
               ))}
             </Fragment>
           ))}

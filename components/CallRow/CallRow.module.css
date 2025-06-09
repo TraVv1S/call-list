@@ -1,0 +1,81 @@
+.root {
+  border-bottom: 1px solid var(--ui-border);
+  height: 65px;
+  &:has(td:not(.dateHeader)):hover {
+    background-color: var(--ui-light-gray);
+  }
+  &:last-child {
+    border-bottom: none;
+  }
+
+  td {
+    position: relative;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 148%;
+    color: var(--text-primary);
+
+    &:has(.rating) {
+      width: 30%;
+    }
+
+    &:last-child {
+      text-align: right;
+      padding-right: 40px;
+    }
+
+    &.dateHeader {
+      padding: 30px 0 16px;
+      text-align: left;
+      font-size: 15px;
+
+      sup {
+        font-size: 12px;
+        color: #899cb1;
+        margin-left: 2px;
+      }
+    }
+  }
+
+  audio {
+    position: absolute;
+    top: 5px;
+    right: 40px;
+  }
+}
+
+.muted {
+  color: var(--text-secondary);
+}
+
+.rating {
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 26px;
+  font-size: 14px;
+
+  &.excelent {
+    background-color: var(--ui-light-green);
+    color: var(--text-green);
+    border: 1px solid var(--ui-green);
+  }
+
+  &.good {
+    background-color: var(--ui-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--ui-icon);
+  }
+
+  &.bad {
+    background-color: var(--ui-light-red);
+    color: var(--ui-red);
+    border: 1px solid var(--ui-red);
+  }
+}
+
+.avatar {
+  object-fit: contain;
+}

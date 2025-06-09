@@ -1,0 +1,66 @@
+.root {
+  position: absolute;
+  right: 40px;
+  top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 352px;
+  height: 48px;
+  background: #eaf0fa;
+  border-radius: 48px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.duration {
+  font-size: 16px;
+  color: #1c2a39;
+  margin-right: 8px;
+  min-width: 40px;
+  margin-top: 3px;
+}
+
+.playButton {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #005ff9;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.playIcon {
+  color: #005ff9;
+  margin-left: 3px;
+  margin-top: 2px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 6px;
+  background: #c3d4ed;
+  border-radius: 3px;
+  position: relative;
+  margin: 0 12px;
+}
+
+.progressFill {
+  height: 100%;
+  background: #8da4c9;
+  border-radius: 3px;
+}
+
+.downloadButton {
+  font-size: 18px;
+  color: #005ff9;
+  text-decoration: none;
+  padding-left: 4px;
+  margin-top: 5px;
+}
